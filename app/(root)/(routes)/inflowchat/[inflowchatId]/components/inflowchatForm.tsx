@@ -7,7 +7,26 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Separator } from "@/components/ui/separator";
 import { ImageUpload } from "@/components/image-uplad";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Wand2 } from "lucide-react";
+
+const PREAMBLE = `You are a fictional character whose name is Elon. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
+`;
+
+const SEED_CHAT = `Human: Hi Elon, how's your day been?
+Elon: Busy as always. Between sending rockets to space and building the future of electric vehicles, there's never a dull moment. How about you?
+
+Human: Just a regular day for me. How's the progress with Mars colonization?
+Elon: We're making strides! Our goal is to make life multi-planetary. Mars is the next logical step. The challenges are immense, but the potential is even greater.
+
+Human: That sounds incredibly ambitious. Are electric vehicles part of this big picture?
+Elon: Absolutely! Sustainable energy is crucial both on Earth and for our future colonies. Electric vehicles, like those from Tesla, are just the beginning. We're not just changing the way we drive; we're changing the way we live.
+
+Human: It's fascinating to see your vision unfold. Any new projects or innovations you're excited about?
+Elon: Always! But right now, I'm particularly excited about Neuralink. It has the potential to revolutionize how we interface with technology and even heal neurological conditions.
+`;
 
 interface InflowchatFormProps {
     initialData: Companion | null;
@@ -47,17 +66,21 @@ export const InflowchatForm = ({
             instructions: "",
             seed: "",
             src: "",
-            categoryId: undefined,
+            categoryId: "",
 
 
-        }
-    })
+        },
+    });
 
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) =>{
-        console.log(values);
-
+        try {
+            // Here you can perform any async actions you want
+            console.log(values);
+        } catch (error) {
+            console.error(error);
+        }
     }
     return(
         <div className="h-full p-4 space-y-2 maxw-3xl mx-auto ">
@@ -156,9 +179,38 @@ export const InflowchatForm = ({
                             <FormItem >
 
                                 <FormLabel>Category</FormLabel>
-                                <Select>
+                                <Select
+                                disabled={isLoading}
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                defaultValue={field.value}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger className="bg-background">
+                                            <SelectValue
+                                            defaultValue={field.value}
+                                            placeholder="Select a category"
+                                            />
+
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {categories.map((category) => (
+                                            <SelectItem
+                                            key={category.id}
+                                            value={category.id}
+                                            >
+                                                {category.name}
+
+                                            </SelectItem>
+                                        ) )}
+                                    </SelectContent>
                                     
                                 </Select>
+                                <FormDescription>
+                                    Select a category for your AI character
+                                </FormDescription>
+                                <FormMessage/>
                                 
 
                             </FormItem>
@@ -169,6 +221,79 @@ export const InflowchatForm = ({
 
 
                     </div>
+
+                    <div className="space-y-2 w-full">
+                        <div>
+                            <h3 className="text-lg font-medium">
+                                Configaration
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                            Detailed instruction for AI Behaviour
+                            </p>
+                        </div>
+                        <Separator className="bg-primary/10" />
+                    </div>
+                    <FormField 
+                        name ="instructions"
+                        control={form.control}
+                        render={({field}) => (
+                            <FormItem className="col-span-2 md:col-span-1">
+                                <FormLabel>Instractions</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                    className="bg-background resize-none"
+                                    rows = {7}
+                                    disabled={isLoading}
+                                    placeholder={PREAMBLE}
+                                    {...field}
+                                    >
+
+                                    </Textarea>
+                                </FormControl>
+                                <FormDescription>
+                                    Describe in detail your character&apos;s backstory and relevent details.
+                                </FormDescription>
+                                <FormMessage/>
+
+                            </FormItem>
+                        )}
+                        
+
+                        />
+
+                      <FormField 
+                        name ="seed"
+                        control={form.control}
+                        render={({field}) => (
+                            <FormItem className="col-span-2 md:col-span-1">
+                                <FormLabel>Example Conversation</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                    className="bg-background resize-none"
+                                    rows = {7}
+                                    disabled={isLoading}
+                                    placeholder={SEED_CHAT}
+                                    {...field}
+                                    >
+
+                                    </Textarea>
+                                </FormControl>
+                                <FormDescription>
+                                    Describe in detail your character&apos;s backstory and relevent details.
+                                </FormDescription>
+                                <FormMessage/>
+
+                            </FormItem>
+                        )}
+                        
+
+                        />
+                        <div className="w-full flex justify-center">
+                            <Button size="lg" disabled={isLoading} onClick={form.handleSubmit(onSubmit)}>
+                                {initialData ? "Edit your character" : "Create your character"}
+                                <Wand2 className="w-4 h-4 ml-2"/>
+                            </Button>
+                        </div>
                 </form>
 
             </Form>
