@@ -1,5 +1,6 @@
 "use client"
 import * as z from "zod"
+import axios from "axios";
 import { Category, Companion } from "@prisma/client"
 import { useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -11,6 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Wand2 } from "lucide-react";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { SubmitHandler } from "react-hook-form";
+
+
 
 const PREAMBLE = `You are a fictional character whose name is Elon. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
 `;
@@ -28,61 +34,84 @@ Human: It's fascinating to see your vision unfold. Any new projects or innovatio
 Elon: Always! But right now, I'm particularly excited about Neuralink. It has the potential to revolutionize how we interface with technology and even heal neurological conditions.
 `;
 
-interface InflowchatFormProps {
-    initialData: Companion | null;
-    categories: Category[];
-}
+
 
 const formSchema = z.object({
-    name: z.string().min(1,{
-        message: "Name is required.",
+    name: z.string().min(1, {
+      message: "Name is required.",
     }),
-    description: z.string().min(1,{
-        message: "desceiption is requered.",
+    description: z.string().min(1, {
+      message: "Description is required.",
     }),
-    instructions: z.string().min(200,{
-        message: "Instruction required at least 200 characters.",
+    instruction: z.string().min(200, {
+      message: "Instructions require at least 200 characters."
     }),
-    seed: z.string().min(200,{
-        message: "Seed required at least 200 characters.",
+    seed: z.string().min(200, {
+      message: "Seed requires at least 200 characters."
     }),
-    src: z.string().min(1,{
-        message: "Image is requered.",
+    src: z.string().min(1, {
+      message: "Image is required."
     }),
-    categoryId: z.string().min(1,{
-        message: "Category is requered.",
+    categoryId: z.string().min(1, {
+      message: "Category is required",
     }),
-})
+  });
+  
+  interface CompanionFormProps {
+    categories: Category[];
+    initialData: Companion | null;
+  };
+  
 
-export const InflowchatForm = ({
+
+
+  export const InflowchatForm = ({
     categories,
     initialData
-}: InflowchatFormProps) => {
+  }: CompanionFormProps) => {
+    const { toast } = useToast();
+    const router = useRouter();
+  
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: initialData || {
-            name: "",
-            description: "",
-            instructions: "",
-            seed: "",
-            src: "",
-            categoryId: "",
-
-
-        },
+      resolver: zodResolver(formSchema),
+      defaultValues: initialData || {
+        name: "",
+        description: "",
+        instruction: "",
+        seed: "",
+        src: "",
+        categoryId: undefined,
+      },
     });
-
+  
     const isLoading = form.formState.isSubmitting;
-
-    const onSubmit = async (values: z.infer<typeof formSchema>) =>{
+  
+    const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (values) =>{
+        console.log(values)
         try {
-            // Here you can perform any async actions you want
-            console.log(values);
+          if (initialData) {
+            await axios.patch(`/api/companion/${initialData.id}`, values);
+          } else {
+            await axios.post("/api/companion", values);
+          }
+    
+          toast({
+            description: "Success.",
+            duration: 3000,
+          });
+    
+          router.refresh();
+          router.push("/");
         } catch (error) {
-            console.error(error);
+          toast({
+            variant: "destructive",
+            description: "Something went wrong.",
+            duration: 3000,
+          });
         }
-    }
-    return(
+      };
+    
+      return(
         <div className="h-full p-4 space-y-2 maxw-3xl mx-auto ">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pb-10">
@@ -234,7 +263,7 @@ export const InflowchatForm = ({
                         <Separator className="bg-primary/10" />
                     </div>
                     <FormField 
-                        name ="instructions"
+                        name ="instruction"
                         control={form.control}
                         render={({field}) => (
                             <FormItem className="col-span-2 md:col-span-1">
@@ -300,3 +329,4 @@ export const InflowchatForm = ({
         </div>
     )
 }
+

@@ -29,13 +29,17 @@ model Companion {
   description        String?
   instruction        String @db.Text
   seed               String @db.Text
+ 
 
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
   categoryId         String?
   category           Category? @relation(fields: [categoryId], references: [id])
+
+  
   @@index([categoryId])
+  
   
 
 }
