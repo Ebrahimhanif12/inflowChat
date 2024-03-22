@@ -31,7 +31,7 @@ export const NavBar = () =>{
                     <Sparkle className="h-4 w-4 fill-white text-white ml-2"></Sparkle>
                 </Button>
                 <ModeToggle></ModeToggle>
-                <UserButton></UserButton>
+                <UserButton afterSignOutUrl="/"></UserButton>
             </div>
             
         </div>
