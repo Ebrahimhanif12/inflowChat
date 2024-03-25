@@ -33,7 +33,7 @@ export const ChatClient = ({
     setInput,
   } = useCompletion({
     api: `/api/chat/${companion.id}`,
-    onFinish(_prompt, completion) {
+    onFinish(prompt, completion) {
       const systemMessage: ChatMessageProps = {
         role: "system",
         content: completion
@@ -47,6 +47,7 @@ export const ChatClient = ({
   });
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    //e.preventDefault();
     const userMessage: ChatMessageProps = {
       role: "user",
       content: input

@@ -8,10 +8,11 @@ async function main() {
             data:[
                 {name: "Famous People"},
                 {name: "Mucisians"},
-                {name: "GAmes"},
+                {name: "Games"},
                 {name: "Animals"},
                 {name: "Philosophy"},
                 {name: "Scientist"},
+                {name: "Programmer"},
             ]
         })
     }

@@ -62,7 +62,7 @@ export const Companions = ({
                                 </CardHeader>
                                 <CardFooter className="flex items-center justify-between text-xs text-muted-foreground">
                                     <p className="lowercase">
-                                        @{item.userNamme}
+                                        @{item.userName}
                                     </p>
                                     <div className="flex items-center">
                                         <MessageSquare className="w-3 h-3 mr-1"/>
