@@ -16,7 +16,13 @@ const font = Poppins({
 
 })
 
-export const NavBar = () =>{
+interface NavbarProps {
+    isPro: boolean;
+}
+
+export const NavBar = ({
+    isPro
+}: NavbarProps) =>{
 
     const proModal = useProModal()
     return(
@@ -31,10 +37,12 @@ export const NavBar = () =>{
 
             </div>
             <div className="flex item-center gap-x-3">
+                {!isPro && (
                 <Button onClick={proModal.onOpen} size="sm" variant="premium">
                     Upgrade
                     <Sparkle className="h-4 w-4 fill-white text-white ml-2"></Sparkle>
                 </Button>
+                )}
                 <ModeToggle></ModeToggle>
                 <UserButton afterSignOutUrl="/"></UserButton>
             </div>

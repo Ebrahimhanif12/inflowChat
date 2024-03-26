@@ -7,9 +7,10 @@ async function main() {
         await db.category.createMany({
             data:[
                 {name: "Famous People"},
-                {name: "Mucisians"},
+                {name: "Musicians"},
                 {name: "Games"},
                 {name: "Animals"},
+                {name: "Movies & TV"},
                 {name: "Philosophy"},
                 {name: "Scientist"},
                 {name: "Programmer"},
