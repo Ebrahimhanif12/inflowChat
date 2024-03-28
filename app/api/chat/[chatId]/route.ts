@@ -81,9 +81,10 @@ export async function POST(
     if (!!similarDocs && similarDocs.length !== 0) {
       relevantHistory = similarDocs.map((doc) => doc.pageContent).join("\n");
     }
-    const { handlers } = LangChainStream();
+    const { stream, handlers } = LangChainStream();
     // Call Replicate for inference
     const model = new Replicate({
+      // "a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
       model:
         "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
       input: {

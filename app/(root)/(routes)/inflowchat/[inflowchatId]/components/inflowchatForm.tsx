@@ -63,7 +63,7 @@ const formSchema = z.object({
   };
   
 
-
+  
 
   export const InflowchatForm = ({
     categories,
@@ -71,17 +71,19 @@ const formSchema = z.object({
   }: CompanionFormProps) => {
     const { toast } = useToast();
     const router = useRouter();
+
+    const defaultValues = initialData ? {
+      src: initialData.src,
+      name: initialData.name,
+      description: initialData.description || "", // Ensure it's not null
+      instruction: initialData.instruction,
+      seed: initialData.seed,
+      categoryId: initialData.categoryId || "", // Ensure it's not null
+    } : undefined;
   
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
-      defaultValues: initialData || {
-        name: "",
-        description: "",
-        instruction: "",
-        seed: "",
-        src: "",
-        categoryId: undefined,
-      },
+      defaultValues: defaultValues,
     });
   
     const isLoading = form.formState.isSubmitting;
