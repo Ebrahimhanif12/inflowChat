@@ -28,7 +28,7 @@ export const NavBar = ({
     return(
         <div className="fixed w-full z-50 flex justify-between ms-center py-2 px-4 border-b bprder-primary/10 bg-secondary h-16">
             <div className="flex item-center">
-                <MobileSidebar></MobileSidebar>
+                <MobileSidebar isPro={isPro}></MobileSidebar>
                 <Link href="/">
                     <h1 className= {cn("hidden md:block text-sl md:text-3xl font-bold text-primary", font.className)}>
                     InflowChat
